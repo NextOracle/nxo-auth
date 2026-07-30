@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/001_create_auth_tables.yaml
+

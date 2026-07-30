@@ -1,0 +1,152 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-auth-role
+      author: nxo-auth
+      changes:
+        - createTable:
+            tableName: auth_role
+            columns:
+              - column:
+                  name: ar_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ar_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: ar_description
+                  type: varchar(2000)
+
+        - createIndex:
+            indexName: idx_auth_role_name
+            tableName: auth_role
+            unique: true
+            columns:
+              - column:
+                  name: ar_name
+
+  - changeSet:
+      id: 002-create-auth-user
+      author: nxo-auth
+      changes:
+        - createTable:
+            tableName: auth_user
+            columns:
+              - column:
+                  name: au_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: au_username
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: au_email
+                  type: varchar(255)
+              - column:
+                  name: au_is_verified
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: au_created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: au_last_login
+                  type: timestamp
+              - column:
+                  name: au_provider
+                  type: varchar(50)
+              - column:
+                  name: au_provider_id
+                  type: varchar(255)
+              - column:
+                  name: au_avatar_url
+                  type: varchar(512)
+
+        - createIndex:
+            indexName: idx_auth_user_username
+            tableName: auth_user
+            columns:
+              - column:
+                  name: au_username
+
+        - createIndex:
+            indexName: idx_auth_user_email
+            tableName: auth_user
+            columns:
+              - column:
+                  name: au_email
+
+        - createIndex:
+            indexName: idx_auth_user_provider
+            tableName: auth_user
+            columns:
+              - column:
+                  name: au_provider
+              - column:
+                  name: au_provider_id
+
+  - changeSet:
+      id: 003-create-auth-role-user
+      author: nxo-auth
+      changes:
+        - createTable:
+            tableName: auth_role_user
+            columns:
+              - column:
+                  name: aru_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: aru_assigned_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: aru_au_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_auth_role_user_au_id
+                    references: auth_user(au_id)
+              - column:
+                  name: aru_ar_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_auth_role_user_ar_id
+                    references: auth_role(ar_id)
+
+        - addUniqueConstraint:
+            tableName: auth_role_user
+            columnNames: aru_au_id, aru_ar_id
+            constraintName: uq_auth_role_user
+
+        - createIndex:
+            indexName: idx_auth_role_user_au_id
+            tableName: auth_role_user
+            columns:
+              - column:
+                  name: aru_au_id
+
+        - createIndex:
+            indexName: idx_auth_role_user_ar_id
+            tableName: auth_role_user
+            columns:
+              - column:
+                  name: aru_ar_id
+

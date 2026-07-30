@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: nxo-auth
+
+server:
+  forward-headers-strategy: framework
