@@ -45,6 +45,11 @@ public class AppProperties {
      */
     private OAuth2Properties oauth2 = new OAuth2Properties();
 
+    /**
+     * Seeded admin account settings.
+     */
+    private AdminProperties admin = new AdminProperties();
+
     @Getter
     @Setter
     public static class OAuth2Properties {
@@ -54,6 +59,19 @@ public class AppProperties {
          * Example: {@code https://app.example.com/oauth2/callback?token=}
          */
         private String redirectUrl;
+    }
+
+    @Getter
+    @Setter
+    public static class AdminProperties {
+        /** E-mail address assigned to the seeded admin user. */
+        private String mail;
+        /** Plain-text password for the seeded admin – will be BCrypt-hashed before storage. */
+        private String password;
+        /** Username for the seeded admin user. */
+        private String username;
+        /** Role name assigned to the seeded admin (e.g. ADMIN). */
+        private String role;
     }
 }
 

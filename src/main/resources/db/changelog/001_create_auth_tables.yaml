@@ -150,3 +150,17 @@ databaseChangeLog:
               - column:
                   name: aru_ar_id
 
+  - changeSet:
+      id: 004-add-auth-user-password
+      author: nxo-auth
+      comment: "Add optional hashed password column used exclusively for the seeded admin account"
+      changes:
+        - addColumn:
+            tableName: auth_user
+            columns:
+              - column:
+                  name: au_password
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+

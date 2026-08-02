@@ -24,7 +24,7 @@ public interface AuthUserRepository extends JpaRepository<AuthUser, UUID>, JpaSp
     boolean existsByAuUsername(String username);
 
     @Query("""
-            select new org.nextoracle.zspiral.config.security.dto.AuthUserWithRolesDto(
+            select new org.nextoracle.dto.AuthUserWithRolesDto(
                 u.auId,
                 u.auUsername,
                 u.auCreatedAt,

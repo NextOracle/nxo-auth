@@ -43,7 +43,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         return AuthUserDetails.builder()
                 .userId(user.getAuId())
                 .username(user.getAuUsername())
-                .password(null)
+                .password(user.getAuPassword())   // non-null only for admin seed account
                 .authorities(authorities)
                 .build();
     }

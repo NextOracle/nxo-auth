@@ -88,6 +88,14 @@ public class AuthUser {
     private String auProviderId;
 
     /**
+     * Hashed password. Only populated for admin accounts created via seed;
+     * OAuth2 / WebAuthn users leave this null.
+     */
+    @Size(max = 255)
+    @Column(name = "au_password", length = 255)
+    private String auPassword;
+
+    /**
      * URL of the user's avatar/profile picture (e.g. provided by Google OAuth2).
      * Stored as a plain URL string — the image itself is served by the provider's CDN.
      */

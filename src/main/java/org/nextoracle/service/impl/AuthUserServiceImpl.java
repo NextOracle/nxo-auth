@@ -10,7 +10,6 @@ import org.nextoracle.mapper.AuthUserMapper;
 import org.nextoracle.repository.AuthUserRepository;
 import org.nextoracle.service.AuthUserService;
 import org.nextoracle.util.SecurityUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -39,8 +38,6 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final JwtService jwtService;
 
-    @Value("${app.verification-url}")
-    private String verificationUrl;
 
     @Transactional
     @Override
