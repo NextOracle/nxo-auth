@@ -10,18 +10,18 @@ import org.nextoracle.entity.AuthUser;
 import org.nextoracle.repository.AuthUserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.ErrorResponseException;
 
 /**
  * Seeds the initial admin user and role on application startup if they do not already exist.
  * Credentials are read from {@code nxo-auth.admin.*} in application.yml.
+ * Only runs when {@code nxo-auth.admin.username} is configured.
  */
 @Component
+@ConditionalOnProperty(prefix = "nxo-auth.admin", name = "username")
 @RequiredArgsConstructor
 @Log4j2
 public class AdminCreation implements ApplicationRunner {
@@ -40,16 +40,16 @@ public class AdminCreation implements ApplicationRunner {
 
         if (admin.getUsername() == null || admin.getPassword() == null
                 || admin.getRole() == null || admin.getMail() == null) {
-            throw new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                            "Admin credentials not configured. Set nxo-auth.admin.* in application.yml"), null);
+            log.warn("Admin credentials incomplete. Skipping admin seeding. " +
+                    "Ensure nxo-auth.admin.username, password, mail and role are all set.");
+            return;
         }
 
         // 1. Create role if it doesn't exist
         AuthRole role;
         try {
             role = authRoleService.getRoleByName(admin.getRole());
-        } catch (Exception e) {
+        } catch (Exception _) {
             log.info("Creating initial role: {}", admin.getRole());
             AuthRole newRole = new AuthRole();
             newRole.setArName(admin.getRole());
@@ -70,9 +70,8 @@ public class AdminCreation implements ApplicationRunner {
 
         // 3. Assign role to user if not already assigned
         AuthUser user = authUserRepository.findByAuUsername(admin.getUsername())
-                .orElseThrow(() -> new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR,
-                        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                                "Admin user not found after creation"), null));
+                .orElseThrow(() -> new IllegalStateException(
+                        "Admin user not found after creation – this should never happen"));
 
         final AuthRole finalRole = role;
         boolean alreadyAssigned = authRoleUserService.findAllByUserId(user.getAuId())
