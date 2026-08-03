@@ -58,4 +58,6 @@ public interface AuthRoleService {
     AuthRole saveEntity(AuthRole authRole);
 
     AuthRole getRoleByName(String roleName);
+
+    Optional<AuthRole> findByName(String roleName);
 }

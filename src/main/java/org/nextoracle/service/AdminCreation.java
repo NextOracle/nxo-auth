@@ -11,6 +11,7 @@ import org.nextoracle.repository.AuthUserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @ConditionalOnProperty(prefix = "nxo-auth.admin", name = "username")
+@DependsOn("nxoAuthLiquibase")
 @RequiredArgsConstructor
 @Log4j2
 public class AdminCreation implements ApplicationRunner {
@@ -46,16 +48,13 @@ public class AdminCreation implements ApplicationRunner {
         }
 
         // 1. Create role if it doesn't exist
-        AuthRole role;
-        try {
-            role = authRoleService.getRoleByName(admin.getRole());
-        } catch (Exception _) {
+        AuthRole role = authRoleService.findByName(admin.getRole()).orElseGet(() -> {
             log.info("Creating initial role: {}", admin.getRole());
             AuthRole newRole = new AuthRole();
             newRole.setArName(admin.getRole());
             newRole.setArDescription("Administrator role (auto-created)");
-            role = authRoleService.saveEntity(newRole);
-        }
+            return authRoleService.saveEntity(newRole);
+        });
 
         // 2. Create admin user if it doesn't exist
         if (!authUserRepository.existsByAuUsername(admin.getUsername())) {

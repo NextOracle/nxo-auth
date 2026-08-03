@@ -11,9 +11,18 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "nxo-auth.jwt")
 public class JwtProperties {
 
+    private String issuer;
+    private RsaProperties rsa;
     private AccessTokenProperties accessToken;
     private RefreshTokenProperties refreshToken;
     private CookieProperties cookie;
+
+    @Getter
+    @Setter
+    public static class RsaProperties {
+        private String privateKeyLocation;
+        private String publicKeyLocation;
+    }
 
     @Getter
     @Setter

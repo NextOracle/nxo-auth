@@ -91,4 +91,9 @@ public class AuthRoleServiceImpl implements AuthRoleService {
         return authRoleRepository.findByArName(roleName).orElseThrow(()
                 -> new EntityNotFoundException("No role found with this name"));
     }
+
+    @Override
+    public Optional<AuthRole> findByName(String roleName) {
+        return authRoleRepository.findByArName(roleName);
+    }
 }

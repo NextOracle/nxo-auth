@@ -19,8 +19,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Optional;
 
 @Configuration
 @EnableMethodSecurity
@@ -37,12 +40,11 @@ public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
+    private final Optional<ClientRegistrationRepository> clientRegistrationRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-                // CSRF disabled: all state-mutating endpoints require a JWT Bearer token in the
-                // Authorization header. Browsers cannot forge that header in cross-origin requests,
-                // so there is no CSRF vector. Cookie/session credentials are never used for auth.
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
@@ -50,11 +52,12 @@ public class SecurityConfig {
                         .requestMatchers(appProperties.getWhitelist().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oAuth2LoginSuccessHandler)
-                )
                 .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        if (clientRegistrationRepository.isPresent()) {
+            http.oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler));
+        }
 
         return http.build();
     }

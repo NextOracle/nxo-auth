@@ -36,7 +36,7 @@ public class AuthRoleUser {
      * Timestamp when the role was assigned to the user.
      */
     @CreationTimestamp
-    @Column(name = "assigned_at", nullable = false)
+    @Column(name = "aru_assigned_at", nullable = false)
     private LocalDateTime aruAssignedAt;
 
     /**

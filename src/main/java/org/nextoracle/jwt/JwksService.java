@@ -16,7 +16,7 @@ public class JwksService {
 
     private final RSAPublicKey rsaPublicKey;
 
-    @Value("${app.jwt.issuer}")
+    @Value("${nxo-auth.jwt.issuer}")
     private String issuer;
 
     public Map<String, Object> getOpenIdConfiguration() {

@@ -24,10 +24,10 @@ import java.util.Base64;
 @Configuration
 public class RsaKeyConfig {
 
-    @Value("${app.jwt.rsa.private-key-location}")
+    @Value("${nxo-auth.jwt.rsa.private-key-location}")
     private Resource privateKeyResource;
 
-    @Value("${app.jwt.rsa.public-key-location}")
+    @Value("${nxo-auth.jwt.rsa.public-key-location}")
     private Resource publicKeyResource;
 
     @Bean

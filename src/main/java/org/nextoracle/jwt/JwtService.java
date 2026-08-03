@@ -25,7 +25,7 @@ public class JwtService {
     private final RSAPrivateKey rsaPrivateKey;
     private final RSAPublicKey rsaPublicKey;
 
-    @Value("${app.jwt.issuer}")
+    @Value("${nxo-auth.jwt.issuer}")
     private String issuer;
 
     private SecretKey signingKey() {
