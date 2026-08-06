@@ -248,4 +248,12 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/NextOracle/nxo-auth</url>
+		</repository>
+	</distributionManagement>
+
 </project>
