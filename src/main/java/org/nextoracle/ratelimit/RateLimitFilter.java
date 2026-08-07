@@ -69,7 +69,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setContentType("application/problem+json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"type\":\"about:blank\",\"title\":\"Too Many Requests\"," +
-               "\"status\":429,\"detail\":\"Πολλές αιτήσεις. Δοκιμάστε ξανά σε λίγο.\",\"instance\":\"" + path + "\"}");
+               "\"status\":429,\"detail\":\"Too many requests. Please try again later.\",\"instance\":\"" + path + "\"}");
         }
     }
 

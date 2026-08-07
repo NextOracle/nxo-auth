@@ -45,8 +45,8 @@ public final class JwtAuthenticationEntryPoint implements AuthenticationEntryPoi
         }
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
-        problem.setTitle("Μη εξουσιοδοτημένη πρόσβαση");
-        problem.setDetail("Απαιτείται έγκυρη ταυτοποίηση για την πρόσβαση σε αυτόν τον πόρο.");
+        problem.setTitle("Unauthorized access");
+        problem.setDetail("Valid authentication is required to access this resource.");
         problem.setInstance(URI.create(request.getRequestURI()));
 
         // Write the 401 body directly — no sendError(), so no internal forward to /error
