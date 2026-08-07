@@ -63,24 +63,47 @@ public interface AuthUserService {
     AuthUser findById(UUID userId);
 
     /**
+     * Get all authUsers with their roles in a paginated format.
      *
+     * @param pageable the pagination information.
+     * @return a page of {@link AuthUserWithRolesDto} entities.
      */
     Page<AuthUserWithRolesDto> getUsersWithRoles(Pageable pageable);
 
     /**
      * Update the last login timestamp for a user.
+     *
+     * @param userId the id of the user.
      */
     void updateLastLogin(UUID userId);
 
     /**
      * Delete the "id" authUser.
+     *
+     * @param id the id of the user.
      */
     void delete(UUID id);
 
     /**
+     * Get the currently authenticated user.
      *
+     * @return the entity.
      */
     AuthUser findByUser();
 
+    /**
+     * Get a user by their email.
+     *
+     * @param email the email of the user.
+     * @return an optional containing the user if found.
+     */
     Optional<AuthUser> getUserByEmail(String email);
+
+    /**
+     * Get a user by their username.
+     *
+     * @param username the username of the user.
+     * @return an optional containing the user if found.
+     */
+    Optional<AuthUser> getByUsername(String username);
 }

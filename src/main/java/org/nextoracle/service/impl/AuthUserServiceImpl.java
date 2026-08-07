@@ -81,7 +81,6 @@ public class AuthUserServiceImpl implements AuthUserService {
     }
 
 
-
     @Override
     public AuthUser findById(UUID userId) {
         return authUserRepository.findById(userId)
@@ -113,9 +112,9 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     @Override
     public AuthUser findByUser() {
-        return authUserRepository.findById(Objects.requireNonNull(SecurityUtil.getActiveUUID())).orElseThrow(()->
-                new ErrorResponseException(HttpStatus.NOT_FOUND,ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
-                        "User not found"),null));
+        return authUserRepository.findById(Objects.requireNonNull(SecurityUtil.getActiveUUID())).orElseThrow(() ->
+                new ErrorResponseException(HttpStatus.NOT_FOUND, ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
+                        "User not found"), null));
     }
 
     @Override
@@ -123,4 +122,8 @@ public class AuthUserServiceImpl implements AuthUserService {
         return authUserRepository.findByAuEmail(email);
     }
 
+    @Override
+    public Optional<AuthUser> getByUsername(String username) {
+        return authUserRepository.findByAuUsername(username);
+    }
 }
