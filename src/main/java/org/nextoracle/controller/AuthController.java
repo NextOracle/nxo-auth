@@ -36,7 +36,6 @@ public class AuthController {
     private final AuthRoleUserService authRoleUserService;
     private final JwtProperties jwtProperties;
 
-    @IsAdmin
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         log.debug("Generating JWT for login request {}", loginRequestDto);

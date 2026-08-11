@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.nextoracle</groupId>
 	<artifactId>nxo-auth</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<packaging>jar</packaging>
 	<name>nxo-auth-spring-boot-starter</name>
 	<description>NxO Auth – Spring Boot auto-configuration library for JWT, WebAuthn, OAuth2 and role-based security</description>
