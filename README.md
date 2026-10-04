@@ -29,7 +29,7 @@
 
 | Requirement | Minimum version |
 |---|---|
-| **Java** | 26 |
+| **Java** | 25 |
 | **Spring Boot** | 4.1.0 |
 | **Maven** | 3.9+ |
 | **Database** | Any JDBC-compatible DB supported by Liquibase (PostgreSQL recommended) |
