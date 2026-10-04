@@ -1,5 +1,6 @@
 package org.nextoracle.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -91,6 +92,7 @@ public class AuthUser {
      * Hashed password. Only populated for admin accounts created via seed;
      * OAuth2 / WebAuthn users leave this null.
      */
+    @JsonIgnore
     @Size(max = 255)
     @Column(name = "au_password", length = 255)
     private String auPassword;

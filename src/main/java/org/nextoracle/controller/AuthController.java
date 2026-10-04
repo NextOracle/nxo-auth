@@ -13,6 +13,7 @@ import org.nextoracle.jwt.JwtService;
 import org.nextoracle.jwt.RefreshTokenService;
 import org.nextoracle.service.AuthRoleUserService;
 import org.nextoracle.service.AuthService;
+import org.nextoracle.service.AuthUserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -34,6 +35,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final AuthRoleUserService authRoleUserService;
+    private final AuthUserService authUserService;
     private final JwtProperties jwtProperties;
 
     @PostMapping("/login")
@@ -61,7 +63,7 @@ public class AuthController {
 
 
     @PostMapping("/refresh")
-    public ResponseEntity<String> refreshToken(
+    public ResponseEntity<LoginResponseDto> refreshToken(
             @CookieValue(name = REFRESH_TOKEN_COOKIE, required = false) String refreshToken) {
 
         if (refreshToken == null || refreshToken.isEmpty()) {
@@ -75,14 +77,20 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        AuthUser user = authService.getCurrentUser();
+        // The access token is typically expired when /refresh is called, so the user
+        // must be resolved from the refresh token, not from the SecurityContext.
+        AuthUser user = authUserService.getByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<String> roles = authRoleUserService.findAllByUserId(user.getAuId())
                 .stream()
                 .map(r -> r.getAuthRole().getArName())
                 .toList();
 
-        return ResponseEntity.ok(jwtService.generate(username, user.getAuId(), roles, user.getAuProvider()));
+        String newAccessToken = jwtService.generate(username, user.getAuId(), roles, null);
+        return ResponseEntity.ok(new LoginResponseDto(newAccessToken, jwtService.getExpiration()));
     }
 
     @GetMapping("/me")
